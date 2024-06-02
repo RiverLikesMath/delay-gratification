@@ -1,4 +1,6 @@
+{-# LANGUAGE ScopedTypeVariables #-}
 module Main where
+
 import Data.Time
 
 convToUTC :: String -> Maybe UTCTime
@@ -27,9 +29,9 @@ currDiffMsg amount startTime timeElapsed =
 calcDiff :: Double -> NominalDiffTime -> NominalDiffTime 
 calcDiff amount x = secondsToNominalDiffTime (realToFrac nextFar ) 
     where 
-      cast = realToFrac x
+      cast :: Double  = realToFrac x
       howFar = logBase 2 cast 
-      floorFar = realToFrac ( floor howFar ) 
+      floorFar = realToFrac ( floor howFar :: Integer ) 
       nextFar = 2 ** (floorFar + amount) 
 
 main :: IO ()
