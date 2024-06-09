@@ -38,7 +38,7 @@ main :: IO ()
 main = do
     now <- getCurrentTime
     
-    let startTime = convToUTC "2024-06-01 16:39PDT"  
+    let startTime = convToUTC "2024-06-04 16:14PDT"  
       in case startTime of 
          Nothing -> putStrLn "gimme a good date" 
          Just x -> printCheckTimes now x 

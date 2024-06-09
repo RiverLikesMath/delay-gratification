@@ -9,25 +9,25 @@ outputs = {nixpkgs, utils, ...}:
           config = { };
  
           overlay = pkgsNew: pkgsOld : {
-            timeThingy = 
+            delay-gratification =
                 pkgsNew.haskell.lib.justStaticExecutables
-                    pkgsNew.haskellPackages.timeThingy;
+                    pkgsNew.haskellPackages.delay-gratification;
             haskellPackages = pkgsOld.haskellPackages.override (old : {
           overrides = pkgsNew.haskell.lib.packageSourceOverrides {
-               timeThingy = ./.;
+               delay-gratification = ./.;
          }; 
        }); 
-     }; 
+     };
      
      pkgs = import nixpkgs { inherit config system; overlays = [ overlay ]; }; 
           in 
            rec {
-               packages.default = pkgs.haskellPackages.timeThingy;
+               packages.default = pkgs.haskellPackages.delay-gratification;
                apps.default = { 
                   type = "app";
-                  program = "${pkgs.timeThingy}/bin/timeThingy";
+                  program = "${pkgs.delay-gratification}/bin/delay-gratification";
                 };
-               devShells.default = pkgs.haskellPackages.timeThingy.env;
+               devShells.default = pkgs.haskellPackages.delay-gratification.env;
         }
      );   
 }
