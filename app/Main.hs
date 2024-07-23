@@ -2,6 +2,7 @@
 module Main where
 
 import Data.Time
+import Options.Applicative 
 
 convToUTC :: String -> Maybe UTCTime
 convToUTC timeStr = parseTimeM True defaultTimeLocale "%Y-%-m-%-d %R%Z" timeStr :: Maybe UTCTime
@@ -34,11 +35,33 @@ calcDiff amount x = secondsToNominalDiffTime (realToFrac nextFar )
       floorFar = realToFrac ( floor howFar :: Integer ) 
       nextFar = 2 ** (floorFar + amount) 
 
+data DelayOpts = DelayOpts 
+  {
+   hello :: String
+ --  , quiet :: Bool
+ -- , enthusiasm :: Int
+  }
+
+delayOpts :: Parser DelayOpts 
+delayOpts = DelayOpts 
+   <$> strOption
+    (long "start" 
+    <> metavar "STARTDATE"
+    <> help "the date and time to start the delay timer, in %Y-%-m-%-d %R%Z form. Only currently understands PDT")
+
 main :: IO ()
-main = do
-    now <- getCurrentTime
-    
-    let startTime = convToUTC "2024-06-04 16:14PDT"  
+main = sayTimes =<< execParser opts 
+    where 
+      opts = info (delayOpts <**> helper)
+         ( fullDesc 
+           <> progDesc "Print the previous and next time for STARTDATE, using teh algorithm to determine when the previous and next time'll be"
+           <> header "hello! this is my first command line haskell program, it helps me avoid looking at things too often" )
+
+
+sayTimes :: DelayOpts -> IO () 
+sayTimes (DelayOpts date) = do  
+   now <- getCurrentTime  
+   let startTime = convToUTC date  
       in case startTime of 
-         Nothing -> putStrLn "gimme a good date" 
-         Just x -> printCheckTimes now x 
+        Nothing -> putStrLn "gimme a good date" 
+        Just x -> printCheckTimes now x 
