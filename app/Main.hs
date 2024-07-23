@@ -47,21 +47,26 @@ delayOpts = DelayOpts
    <$> strOption
     (long "start" 
     <> metavar "STARTDATE"
-    <> help "the date and time to start the delay timer, in %Y-%-m-%-d %R%Z form. Only currently understands PDT")
+    <> value "2024-07-22 20:47PDT"
+    <> help "the date and time to start the delay timer, in %Y-%-m-%-d %R%Z form. Example (and current default)  is '2024-07-22 20:47PDT'.  Only currently understands PDT")
 
 main :: IO ()
-main = sayTimes =<< execParser opts 
+main = trySayTimes =<< execParser opts 
     where 
       opts = info (delayOpts <**> helper)
          ( fullDesc 
            <> progDesc "Print the previous and next time for STARTDATE, using teh algorithm to determine when the previous and next time'll be"
            <> header "hello! this is my first command line haskell program, it helps me avoid looking at things too often" )
 
-
-sayTimes :: DelayOpts -> IO () 
-sayTimes (DelayOpts date) = do  
+parseDateAndGo :: String -> IO () --better name please! 
+parseDateAndGo date = do
    now <- getCurrentTime  
    let startTime = convToUTC date  
       in case startTime of 
         Nothing -> putStrLn "gimme a good date" 
         Just x -> printCheckTimes now x 
+
+trySayTimes :: DelayOpts -> IO () 
+trySayTimes (DelayOpts date) =  parseDateAndGo date 
+
+   
