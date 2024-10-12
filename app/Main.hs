@@ -3,19 +3,7 @@ module Main where
 
 import Data.Time
 import Options.Applicative 
-
-convToUTC :: String -> Maybe UTCTime
-convToUTC timeStr = parseTimeM True defaultTimeLocale "%Y-%-m-%-d %R%Z" timeStr :: Maybe UTCTime
-
-printCheckTimes :: UTCTime -> UTCTime -> IO ()
-printCheckTimes now startTime = 
-   putStrLn finalMsg 
-      where
-         timeElapsed = diffUTCTime now startTime 
-         
-         nextStr = currDiffMsg 1 startTime timeElapsed 
-         prevStr = currDiffMsg 0 startTime timeElapsed 
-         finalMsg = "\n    next " ++ nextStr ++ "\n" ++ "previous " ++ prevStr ++ "\n"
+import TimeLogic 
  
 
 currDiffMsg :: Double -> UTCTime -> NominalDiffTime -> String 
