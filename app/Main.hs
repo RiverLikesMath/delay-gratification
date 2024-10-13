@@ -6,27 +6,11 @@ import Options.Applicative
 import TimeLogic 
  
 
-currDiffMsg :: Double -> UTCTime -> NominalDiffTime -> String 
-currDiffMsg amount startTime timeElapsed = 
-    message where 
-         pacific = TimeZone (-7*60) False "PDT" 
-         diff = calcDiff amount timeElapsed 
-         newTime = addUTCTime diff startTime 
-         newTimeLocal = utcToZonedTime pacific newTime 
-         message = "one is " ++ (show newTimeLocal) 
-
-calcDiff :: Double -> NominalDiffTime -> NominalDiffTime 
-calcDiff amount x = secondsToNominalDiffTime (realToFrac nextFar ) 
-    where 
-      cast :: Double  = realToFrac x
-      howFar = logBase 2 cast 
-      floorFar = realToFrac ( floor howFar :: Integer ) 
-      nextFar = 2 ** (floorFar + amount) 
 
 data DelayOpts = DelayOpts 
   {
    hello :: String
- --  , quiet :: Bool
+ -- , quiet :: Bool
  -- , enthusiasm :: Int
   }
 
