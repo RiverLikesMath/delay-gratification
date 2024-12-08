@@ -35,7 +35,7 @@ parseDateAndGo date = do
    now <- getCurrentTime  
    let startTime = convToUTC date  
       in case startTime of 
-        Nothing -> putStrLn "gimme a good date" 
+        Nothing -> putStrLn "when calling with --start, the date format is YYYY-MM-DD HH:MMPDT" 
         Just x -> printCheckTimes now x 
 
 trySayTimes :: DelayOpts -> IO () 
