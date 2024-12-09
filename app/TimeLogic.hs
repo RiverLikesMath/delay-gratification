@@ -5,25 +5,24 @@ module TimeLogic (convToUTC, printCheckTimes)  where
 import Data.Time
 
 convToUTC :: String -> Maybe UTCTime
-convToUTC timeStr = parseTimeM True defaultTimeLocale "%Y-%-m-%-d %R%Z" timeStr :: Maybe UTCTime
+convToUTC timeStr = parseTimeM True defaultTimeLocale "%Y-%-m-%-d %R" timeStr :: Maybe UTCTime
 
-printCheckTimes :: UTCTime -> UTCTime -> IO ()
-printCheckTimes now startTime =
+printCheckTimes :: UTCTime -> UTCTime -> TimeZone -> IO ()
+printCheckTimes now startTime tz = 
    putStrLn finalMsg
       where
          timeElapsed = diffUTCTime now startTime
 
-         nextStr = currDiffMsg 1 startTime timeElapsed
-         prevStr = currDiffMsg 0 startTime timeElapsed
+         nextStr = currDiffMsg 1 startTime timeElapsed tz
+         prevStr = currDiffMsg 0 startTime timeElapsed tz
          finalMsg = "\n    next " ++ nextStr ++ "\n" ++ "previous " ++ prevStr ++ "\n"
 
-currDiffMsg :: Double -> UTCTime -> NominalDiffTime -> String
-currDiffMsg amount startTime timeElapsed =
+currDiffMsg :: Double -> UTCTime -> NominalDiffTime -> TimeZone -> String
+currDiffMsg amount startTime timeElapsed tz =
     message where
-         pacific = TimeZone (-7*60) False "PDT"
          diff = calcDiff amount timeElapsed
          newTime = addUTCTime diff startTime
-         newTimeLocal = utcToZonedTime pacific newTime
+         newTimeLocal = utcToZonedTime tz newTime
          message = "one is " ++ (show newTimeLocal)
 
 
