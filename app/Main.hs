@@ -33,11 +33,11 @@ main = trySayTimes =<< execParser opts
 parseDateAndGo :: String -> IO () --better name please! 
 parseDateAndGo date = do
    now <- getCurrentTime  
-   pacific <- getCurrentTimeZone --this'll never be run outside the pacific timezones, right? :p
+   timezone <- getCurrentTimeZone --this'll never be run outside the pacific timezones, right? :p
    let startTime = convToUTC date  
       in case startTime of 
         Nothing -> putStrLn "when calling with --start, the date format is YYYY-MM-DD HH:MM. Assumes local time." 
-        Just x -> printCheckTimes now x pacific
+        Just x -> printCheckTimes now x timezone
 
 trySayTimes :: DelayOpts -> IO () 
 trySayTimes (DelayOpts date) =  parseDateAndGo date 
