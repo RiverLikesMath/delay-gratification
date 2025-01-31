@@ -4,8 +4,9 @@ module TimeLogic (convToUTC, printCheckTimes)  where
 
 import Data.Time
 
-convToUTC :: String -> Maybe UTCTime
-convToUTC timeStr = parseTimeM True defaultTimeLocale "%Y-%-m-%-d %R" timeStr :: Maybe UTCTime
+convToUTC :: String -> TimeZone -> Maybe UTCTime
+convToUTC timeStr timezone = parseTimeM True defaultTimeLocale "%Y-%-m-%-d %R%Z" localizedTimeStr 
+           where localizedTimeStr = timeStr ++ (show timezone)  
 
 printCheckTimes :: UTCTime -> UTCTime -> TimeZone -> IO ()
 printCheckTimes now startTime tz = 

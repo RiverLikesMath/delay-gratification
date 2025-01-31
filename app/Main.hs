@@ -4,8 +4,6 @@ module Main where
 import Data.Time
 import Options.Applicative 
 import TimeLogic 
- 
-
 
 data DelayOpts = DelayOpts 
   {
@@ -19,8 +17,8 @@ delayOpts = DelayOpts
    <$> strOption
     (long "start" 
     <> metavar "STARTDATE"
-    <> value "2024-07-22 20:47PDT"
-    <> help "the date and time to start the delay timer, in %Y-%-m-%-d %R%Z form. Example (and current default)  is '2024-07-22 20:47PDT'.  Only currently understands PDT")
+    <> value "2024-07-22 20:47"
+    <> help "the date and time to start the delay timer, in %Y-%-m-%-d %R form. Example (and current default)  is '2024-07-22 20:47')") 
 
 main :: IO ()
 main = trySayTimes =<< execParser opts 
@@ -33,8 +31,8 @@ main = trySayTimes =<< execParser opts
 parseDateAndGo :: String -> IO () --better name please! 
 parseDateAndGo date = do
    now <- getCurrentTime  
-   timezone <- getCurrentTimeZone --this'll never be run outside the pacific timezones, right? :p
-   let startTime = convToUTC date  
+   timezone <- getCurrentTimeZone --this'll never be run outside the pacific timezones, right? 
+   let startTime = convToUTC date timezone 
       in case startTime of 
         Nothing -> putStrLn "when calling with --start, the date format is YYYY-MM-DD HH:MM. Assumes local time." 
         Just x -> printCheckTimes now x timezone
