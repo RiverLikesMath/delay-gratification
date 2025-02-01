@@ -12,15 +12,18 @@ data DelayedDateTime = DelayedDateTime {
 -- algebraic data type 
 
 
-data DelayedDateTimeStore = DelayedDateTimeStore [DelayedDateTime] deriving Show
 
-class DateTimeCrud a where    --a can be any type! so the tuple for data DelayedDateTimeStore up above *might* be better . If we do that we may not need the typeclass at all
-    add    :: a -> DelayedDateTime -> DelayedDateTimeStore -> DelayedDateTimeStore  
-    remove :: a -> DelayedDateTime -> DelayedDateTimeStore -> DelayedDateTimeStore
-    
-data TestingStore = TestingStore 
+class DateTimeStore a where    --a can be any type! so the tuple for data DateTimeStore up above *might* be better . If we do that we may not need the typeclass at all
+    add    ::  a -> DelayedDateTime  -> a  
+    remove ::  a -> DelayedDateTime  -> a
 
-instance DateTimeCrud TestingStore  where 
-   add storeType dateTime (DelayedDateTimeStore store)    = DelayedDateTimeStore (   store ++ [dateTime] )
-   remove storeType dateTime (DelayedDateTimeStore [])    = DelayedDateTimeStore []
-   remove storeType dateTime (DelayedDateTimeStore store) = DelayedDateTimeStore ( filter (/= dateTime) store )
+data TestingStore = TestingStore [DelayedDateTime] deriving Show
+data SQLStore     = SQLStore
+
+instance DateTimeStore TestingStore  where 
+   add     (TestingStore store)  dateTime  = TestingStore (   store ++ [dateTime] )
+   remove  (TestingStore [])  dateTime  = TestingStore []
+   remove  (TestingStore store) dateTime = TestingStore ( filter (/= dateTime) store )
+
+--instance DateTimeStore SQLStore where
+--   add storeType dateTime  
